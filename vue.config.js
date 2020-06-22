@@ -1,137 +1,179 @@
-const moment = require('moment')
+'use strict'
 const path = require('path')
-const PurgecssPlugin = require('purgecss-webpack-plugin')
-const glob = require('glob-all')
-const CompressionPlugin = require('compression-webpack-plugin')
-const PUBLIC_PATH = '/'
+const defaultSettings = require('./src/config/index.js')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
-process.env.VUE_APP_Version = require('./package.json').version
+const resolve = dir => path.join(__dirname, dir)
+// page title
+const name = defaultSettings.title || 'vue mobile template'
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
 
-const buildInfo = {
-  buildTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-  appVersion: require('./package.json').version,
-  env: process.env.NODE_ENV
-}
-
-function resolve (dir) {
-  return path.join(__dirname, dir)
-}
-
-// cdn预加载使用
-const externals = {
-  vue: 'Vue',
-  'vue-router': 'VueRouter',
-  vuex: 'Vuex',
-  axios: 'axios',
-  'lodash-es': '_',
-  lodash: '_',
-  moment: 'moment',
-  'dingtalk-jsapi': 'dd',
-  'element-ui': 'ELEMENT'
-}
-
-const cdn = { // 将会注入index.html js 顺序不可乱 注意版本
-  css: [
-    'https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/theme-chalk/index.css'
-  ],
-  js: [
-    'https://g.alicdn.com/dingding/dingtalk-jsapi/2.8.33/dingtalk.open.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/vue.min.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/vue-router.min.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/vuex.min.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/axios.min.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/moment.min.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/moment-zh-cn.js',
-    'https://xfw-bscnym-test.oss-cn-hangzhou.aliyuncs.com/static/js/lodash.min.js',
-    'https://cdn.bootcdn.net/ajax/libs/element-ui/2.13.1/index.js'
-  ]
-}
+// externals
+// const externals = {
+//   vue: 'Vue',
+//   'vue-router': 'VueRouter',
+//   vuex: 'Vuex',
+//   vant: 'vant',
+//   axios: 'axios'
+// }
+// CDN外链，会插入到index.html中
+// const cdn = {
+//   // 开发环境
+//   dev: {
+//     css: [],
+//     js: []
+//   },
+//   // 生产环境
+//   build: {
+//     css: ['https://cdn.jsdelivr.net/npm/vant@2.4.7/lib/index.css'],
+//     js: [
+//       'https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js',
+//       'https://cdn.jsdelivr.net/npm/vue-router@3.1.5/dist/vue-router.min.js',
+//       'https://cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js',
+//       'https://cdn.jsdelivr.net/npm/vuex@3.1.2/dist/vuex.min.js',
+//       'https://cdn.jsdelivr.net/npm/vant@2.4.7/lib/index.min.js'
+//     ]
+//   }
+// }
 
 module.exports = {
-  runtimeCompiler: true,
+  publicPath: './', // 署应用包时的基本 URL。 vue-router hash 模式使用
+  //  publicPath: '/app/', //署应用包时的基本 URL。  vue-router history模式使用
+  outputDir: 'dist', //  生产环境构建文件的目录
+  assetsDir: 'static', //  outputDir的静态资源(js、css、img、fonts)目录
+  lintOnSave: !IS_PROD,
+  productionSourceMap: false, // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   devServer: {
-    // host: "localhost",
-    port: 8080, // 端口号
-    https: false, // https:{type:Boolean}
-    open: false, // 配置自动启动浏览器
-    disableHostCheck: true // 解决127.0.0.1指向其他域名时出现"Invalid Host header"问题
+    port: 9020, // 端口
+    open: false, // 启动后打开浏览器
+    overlay: {
+      //  当出现编译器错误或警告时，在浏览器中显示全屏覆盖层
+      warnings: false,
+      errors: true
+    }
     // proxy: {
-    //   '/bscnym': {
-    //     target: 'http://172.17.9.148:8000',
-    //     changOrigin: true,
-    //     pathRewrite: { '^/': '/' }
+    //   //配置跨域
+    //   '/api': {
+    //       target: "https://test.xxx.com",
+    //       // ws:true,
+    //       changOrigin:true,
+    //       pathRewrite:{
+    //           '^/api':'/'
+    //       }
     //   }
     // }
   },
-  publicPath: PUBLIC_PATH,
-  outputDir: 'dist', // 项目名
-  lintOnSave: true, // 编译警告
-  // auto fix eslint
+  css: {
+    extract: IS_PROD, //是否将组件中的 CSS 提取至一个独立的 CSS 文件中 (而不是动态注入到 JavaScript 中的 inline 代码)。
+    sourceMap: false,
+    loaderOptions: {
+      scss: {
+        // 向全局sass样式传入共享的全局变量, $src可以配置图片cdn前缀
+        // 详情: https://cli.vuejs.org/guide/css.html#passing-options-to-pre-processor-loaders
+        prependData: `
+          @import "assets/css/mixin.scss";
+          @import "assets/css/variables.scss";
+          $cdn: "${defaultSettings.$cdn}";
+          `
+      }
+    }
+  },
+  configureWebpack: config => {
+    config.name = name
+
+    // 为生产环境修改配置...
+    // if (IS_PROD) {
+    //   // externals
+    //   config.externals = externals
+    // }
+  },
+
   chainWebpack: config => {
-    config.plugin('html') // 注入环境变量
-      .tap(args => {
-        args[0].cdn = cdn
-        args[0].buildInfo = buildInfo
-        return args
-      })
+    config.plugins.delete('preload') // TODO: need test
+    config.plugins.delete('prefetch') // TODO: need test
+
+    // 别名 alias
     config.resolve.alias
       .set('@', resolve('src'))
-    config
-      .module
-      .rule('eslint')
-      .use('eslint-loader')
-      .loader('eslint-loader')
+      .set('assets', resolve('src/assets'))
+      .set('api', resolve('src/api'))
+      .set('views', resolve('src/views'))
+      .set('components', resolve('src/components'))
+
+    /**
+     * 添加CDN参数到htmlWebpackPlugin配置中
+     */
+    // config.plugin('html').tap(args => {
+    //   if (IS_PROD) {
+    //     args[0].cdn = cdn.build
+    //   } else {
+    //     args[0].cdn = cdn.dev
+    //   }
+    //   return args
+    //  })
+
+    /**
+     * 设置保留空格
+     */
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .loader('vue-loader')
       .tap(options => {
-        options.fix = true
+        options.compilerOptions.preserveWhitespace = true
         return options
       })
-    config.module
-      .rule('images')
-      .use('url-loader')
-      .loader('url-loader')
-      // 6kb 过于小会导致请求次数变多 影响优化
-      // 同时添加css 路径到cdn
-      .tap(options => Object.assign(options, {
-        limit: 6144
-      }))
-    config
-      .when(process.env.NODE_ENV === 'production',
-        config => {
-          config.merge({
-            externals: externals
-          })
-          config.devtool('none')
-          config.optimization.minimizer('terser').tap((args) => {
-            args[0].terserOptions.compress.drop_console = true // 移除 console.log
-            return args
-          })
-          config
-            .plugin('Purgecss')
-            .use(PurgecssPlugin, [{
-              paths: glob.sync([
-                path.join(__dirname, './public/index.html'),
-                path.join(__dirname, './**/*.vue'),
-                path.join(__dirname, './src/**/*.js')
-              ], {
-                nodir: true
-              }),
-              whitelist: ['html', 'body'],
-              whitelistPatterns: [/data-v-.*/, /v-(modal|bind)$/, /-(leave|enter|appear)(|-(to|from|active))$/, /^(?!cursor-move).+-move$/, /^router-link(|-exact)-active$/],
-              whitelistPatternsChildren: [/^token/, /^pre/, /^code/]
-            }])
-            .end()
-          config
-            // 以下是打包依赖分析 push 请关闭 请只在本地使用
-            // .plugin('webpack-bundle-analyzer')
-            // .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
-            // .end()
-            .plugin('CompressionPlugin')
-            .use(CompressionPlugin)
-            .end()
+      .end()
+    /**
+     * 打包分析
+     */
+    if (IS_PROD) {
+      config.plugin('webpack-report').use(BundleAnalyzerPlugin, [
+        {
+          analyzerMode: 'static'
         }
-      )
-      .when(process.env.NODE_ENV === 'development',
-        config => config.devtool('eval-source-map')
-      )
+      ])
+    }
+    config
+      // https://webpack.js.org/configuration/devtool/#development
+      .when(!IS_PROD, config => config.devtool('cheap-source-map'))
+
+    config.when(IS_PROD, config => {
+      config
+        .plugin('ScriptExtHtmlWebpackPlugin')
+        .after('html')
+        .use('script-ext-html-webpack-plugin', [
+          {
+            // 将 runtime 作为内联引入不单独存在
+            inline: /runtime\..*\.js$/
+          }
+        ])
+        .end()
+      config.optimization.splitChunks({
+        chunks: 'all',
+        cacheGroups: {
+          // cacheGroups 下可以可以配置多个组，每个组根据test设置条件，符合test条件的模块
+          commons: {
+            name: 'chunk-commons',
+            test: resolve('src/components'),
+            minChunks: 3, //  被至少用三次以上打包分离
+            priority: 5, // 优先级
+            reuseExistingChunk: true // 表示是否使用已有的 chunk，如果为 true 则表示如果当前的 chunk 包含的模块已经被抽取出去了，那么将不会重新生成新的。
+          },
+          node_vendors: {
+            name: 'chunk-libs',
+            chunks: 'initial', // 只打包初始时依赖的第三方
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10
+          },
+          vantUI: {
+            name: 'chunk-vantUI', // 单独将 vantUI 拆包
+            priority: 20, // 数字大权重到，满足多个 cacheGroups 的条件时候分到权重高的
+            test: /[\\/]node_modules[\\/]_?vant(.*)/
+          }
+        }
+      })
+      config.optimization.runtimeChunk('single')
+    })
   }
 }
