@@ -18,48 +18,8 @@ Vue.config.productionTip = false
 
 const store = new Vuex.Store({
   state: {
-    register_host: null,
-    search_input: null,
-    user_info: {
-      host: null,
-      name: null,
-      sex: null,
-      email: null,
-      phone: null,
-      age: null
-    },
-    recommendList: {
-      data1: null,
-      value1: false,
-      data2: null,
-      value2: false
-    },
   },
   mutations: {
-    postRegisterHost (state, register_host) {
-      state.register_host = register_host
-    },
-    postSearchInput (state, search_input) {
-      state.search_input = search_input
-    },
-    postUserInfo (state, user_info) {
-      state.user_info = user_info
-    },
-    postHost (state, host) {
-      state.user_info.host = host
-    },
-    postData1 (state, data) {
-      state.recommendList.data1 = data
-    },
-    postValue1 (state, data) {
-      state.recommendList.value1 = data
-    },
-    postData2 (state, data) {
-      state.recommendList.data2 = data
-    },
-    postValue2 (state, data) {
-      state.recommendList.value2 = data
-    },
   }
 })
 
