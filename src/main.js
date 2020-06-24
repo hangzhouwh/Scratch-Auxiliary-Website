@@ -1,25 +1,35 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import Vuex from 'vuex'
-import './plugins/elementui.js'
 import App from './App'
 import router from './router'
-import VueResource from 'vue-resource'
-import axios from 'axios'
+import store from './store'
 
-Vue.use(Vuex)
-Vue.prototype.$axios = axios
-axios.defaults.baseURL = 'http://localhost:8880/api'
-/*'http://39.101.189.21:8880/api'*/
+import {postRequest} from './utils/api'
+import {getRequest} from './utils/api'
 
-Vue.use(VueResource)
+Vue.prototype.postRequest = postRequest
+Vue.prototype.getRequest = getRequest
+
+import 'font-awesome/css/font-awesome.min.css'
+import './plugins/elementui.js'
+
 Vue.config.productionTip = false
 
-const store = new Vuex.Store({
-  state: {
-  },
-  mutations: {
+//路由守卫
+router.beforeEach((to, from, next) => {
+  var host = store.getters.host
+  if (to.path == '/') {
+    next()
+  }
+  if (host == null) {
+    if (to.meta.requireAuth) {
+      next({path: '/'})
+    } else {
+      next()
+    }
+  } else {
+    next()
   }
 })
 

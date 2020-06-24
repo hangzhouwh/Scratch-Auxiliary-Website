@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '../views/Login.vue'
 
 Vue.use(Router)
 
@@ -14,11 +13,42 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/Login',
+      redirect: '/login',
+    },
+    {
+      path: '/register',
+      component: () => import('../views/Register.vue'),
+      redirect: '/registerGetVc',
+      children: [
+        {
+          path: '/registerGetVc',
+          component: () => import('../views/RegisterGetVc.vue'),
+        },
+        {
+          path: '/registerEnterPwq',
+          component: () => import('../views/RegisterEnterPwd.vue'),
+        }
+      ]
     },
     {
       path: '/login',
-      component: Login,
+      component: () => import('../views/Login.vue'),
     },
+    {
+      path: '/home',
+      component: () => import('../views/Home.vue'),
+      meta: {
+        requireAuth: true
+      },
+      children: [
+        {
+          path: '/home/video_list',
+          component: () => import('../views/VideoList.vue'),
+          meta: {
+            requireAuth: true
+          },
+        }
+      ]
+    }
   ]
 })

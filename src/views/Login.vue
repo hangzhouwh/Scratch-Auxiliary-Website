@@ -13,7 +13,7 @@
                 type="text"
                 v-model="loginForm.username"
                 auto-complete="off"
-                placeholder="Place input username"
+                placeholder="请输入用户名"
                 prefix-icon="el-icon-user-solid"></el-input>
     </el-form-item>
     <el-form-item prop="password">
@@ -21,7 +21,7 @@
                 type="password"
                 v-model="loginForm.password"
                 auto-complete="off"
-                placeholder="Place input password"
+                placeholder="请输入密码"
                 prefix-icon="el-icon-s-goods"></el-input>
     </el-form-item>
     <el-form-item>
@@ -34,7 +34,8 @@
     <el-form-item>
       <el-button size="normal"
                  type="success"
-                 style="width: 100%">注册
+                 style="width: 100%"
+                 @click="register">注册
       </el-button>
     </el-form-item>
   </el-form>
@@ -59,18 +60,27 @@
       submitLogin () {
         this.$refs.loginFormRef.validate((valid) => {
           if (valid) {
-            console.log('输入是合法的')
             this.loading = true
-            this.$router.push('/register')
+            this.postRequest(`/user/login/${this.loginForm.username}`, {
+              password: this.loginForm.password
+            }).then(resp => {
+              if (resp) {
+                this.loading = false
+                this.$store.dispatch('setHost', resp.data.host)
+                this.$store.dispatch('setName', resp.data.name)
+              }
+            })
           } else {
-            return this.$message.warning('用户名或密码错误！')
           }
         })
+      },
+      register () {
+        this.$router.push('/register')
       }
     }
   }
 </script>
-<style>
+<style scoped>
   .login-container {
     border-radius: 15px;
     background-clip: padding-box;
