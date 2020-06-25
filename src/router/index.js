@@ -44,7 +44,7 @@ export default new Router({
       children: [
         {
           path: '/home/video_list',
-          component: () => import('../views/VideoList.vue'),
+          component: () => import('../views/ProjectList.vue'),
           meta: {
             requireAuth: true
           },

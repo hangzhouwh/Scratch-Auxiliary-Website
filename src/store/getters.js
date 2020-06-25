@@ -1,5 +1,5 @@
 const getters = {
   host: state => state.user.host,
-  type: state => state.register.inputType
+  user: state => state.user,
 }
 export default getters

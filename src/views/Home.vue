@@ -1,6 +1,39 @@
 <template>
   <el-container>
-    <el-header></el-header>
+    <el-header>
+      <div class="main-header">
+        <div class="header-logo"></div>
+        <div>标题</div>
+        <div class="userPart">
+          <el-tooltip class="item" effect="light" content='修改用户资料' placement="left">
+            <div @click="openUserInfoDialog">
+              <LottieHelloPeep></LottieHelloPeep>
+            </div>
+          </el-tooltip>
+          <el-dialog title="修改用户资料" :visible.sync="dialogUserInfoVisible">
+            <el-form :model="user">
+              <el-form-item label="用户名" label-width="120px">
+                <el-input v-model="user.host"
+                          autocomplete="off"
+                          disabled></el-input>
+              </el-form-item>
+              <el-form-item label="真实姓名" label-width="120px">
+                <el-input v-model="user.name"
+                          autocomplete="off"></el-input>
+              </el-form-item>
+              <el-form-item label="手机号" label-width="120px">
+                <el-input v-model="user.phone"
+                          autocomplete="off"></el-input>
+              </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">Cancel</el-button>
+              <el-button type="primary" @click="editUserInfo()">OK</el-button>
+            </div>
+          </el-dialog>
+        </div>
+      </div>
+    </el-header>
     <el-container>
       <el-aside>
         <el-menu
@@ -22,9 +55,10 @@
         <router-view @openMarkDialog="openMarkDialog(arguments)"/>
         <el-dialog
           title="作品打分"
-          :visible.sync="dialogVisible"
+          :visible.sync="dialogMarkVisible"
           width="60%">
-          <markBox></markBox>
+          <markBox :projectData="openProject"
+                   @close="close()"></markBox>
         </el-dialog>
       </el-main>
     </el-container>
@@ -34,27 +68,38 @@
 
 <script>
   import MarkBox from '../components/markBox'
+  import LottieHelloPeep from '../components/LottieHelloPeep'
 
   export default {
     name: 'Home',
     data () {
       return {
-        dialogVisible: false,
+        dialogMarkVisible: false,
+        dialogUserInfoVisible: false,
+        user: {
+          host: '',
+          password: '',
+          name: '',
+          phone: '',
+          school: '',
+          title: '',
+          degree: '',
+          course: '',
+          yearOfTeaching: ''
+        },
         videoList: [
           {}
         ],
         openProject: {
-          pid: '0001',
-          videoUrl: 'videoUrl0001',
-          picUrl: 'picUrl0001',
-          codeUrl: 'codeUrl0001',
-          sampleNum: null,
-          sampleProportion: null
+          pid: '',
+          videoUrl: '',
+          picUrl: ''
         }
       }
     },
-    components:{
-      markBox:MarkBox
+    components: {
+      markBox: MarkBox,
+      LottieHelloPeep
     },
     methods: {
       handleOpen (key, keyPath) {
@@ -64,12 +109,45 @@
         console.log(key, keyPath)
       },
       openMarkDialog (args) {
-        this.dialogVisible = true
+        this.openProject = args[0]
+        this.dialogMarkVisible = true
+      },
+      openUserInfoDialog () {
+        this.user = this.$store.getters.user
+        this.dialogUserInfoVisible = true
+      },
+      editUserInfo () {
+        this.postRequest2('/user/edit_personal_info',
+          this.user
+        ).then(resp => {
+          console.log('response=>', resp)
+          if (resp) {
+            this.$store.dispatch('setUser', resp.data)
+            return this.$message.success('修改用户信息成功')
+          } else {
+            return this.$message.error('修改用户信息失败')
+          }
+        })
+      },
+      close () {
+        this.dialogMarkVisible = false
       }
     }
   }
 </script>
 
 <style scoped>
+  .main-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
+  .header-logo {
+    width: 50px;
+    margin: 5px;
+    background-image: url("../assets/logo.png");
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
 </style>

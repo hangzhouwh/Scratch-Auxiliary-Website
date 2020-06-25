@@ -77,7 +77,6 @@
       submitRegister () {
         console.log('提交验证码')
         if (this.VcForm.vc === this.realVc) {
-          this.$store.commit('postRegisterHost', this.VcForm.input)
           this.$message.success('Verification code is right!')
           this.$router.push('/registerEnterPwq')
         } else {

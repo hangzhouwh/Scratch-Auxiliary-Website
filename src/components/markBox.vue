@@ -25,7 +25,7 @@
           <el-input v-model="markForm.score"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">确定</el-button>
+          <el-button type="primary" @click="onSubmitMark">确定</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -34,34 +34,38 @@
 </template>
 
 <script>
-  import 'video.js/dist/video-js.css'
-  import {videoPlayer} from 'vue-video-player'
-
   export default {
     name: 'myMarkBox',
+    props: {
+      projectData: {
+        type: Object,
+        required: true
+      }
+    },
     created () {
+      console.log(this.projectData)
     },
     data () {
       return {
         activeNames: ['1'],
-        projectData: {
-          pid: '0001',
-          videoUrl: 'https://player.youku.com/embed/XNDcyNjMxMDA4OA==',
-          picUrl: 'https://s1.ax1x.com/2020/06/24/NwdzhF.png'
-        },
         markForm: {
           score: ''
         }
       }
     },
-    components: {
-      videoPlayer
-    },
     methods: {
       handleChange (val) {
         console.log(val)
       },
-      onSubmit () {
+      onSubmitMark () {
+        this.postRequest(`mark/submit_mark/${this.$store.getters.host}`, {
+          score: this.markForm.score,
+          pid: this.projectData.pid
+        }).then(resp => {
+          if (resp) {
+            this.$emit('close')
+          }
+        })
         console.log('submit!')
       }
     }

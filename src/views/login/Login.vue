@@ -67,7 +67,11 @@
               if (resp) {
                 this.loading = false
                 this.$store.dispatch('setHost', resp.data.host)
-                this.$store.dispatch('setName', resp.data.name)
+                this.getRequest(`/user/${this.loginForm.username}/get_personal_info`).then(resp => {
+                  if (resp){
+                    this.$store.dispatch('setUser', resp.data)
+                  }
+                })
                 this.$router.push('/home')
               }
             })

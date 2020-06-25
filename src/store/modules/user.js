@@ -13,16 +13,16 @@ const mutations = {
   SET_HOST (state, val) {
     state.host = val
   },
-  SET_NAME (state, val) {
-    state.name = val
+  SET_USER (state, val) {
+    state = val
   }
 }
 const actions = {
   setHost ({commit}, val) {
     commit('SET_HOST', val)
   },
-  setName ({commit}, val) {
-    commit('SET_NAME', val)
+  setUser ({commit}, val) {
+    commit('SET_USER', val)
   }
 }
 export default {
