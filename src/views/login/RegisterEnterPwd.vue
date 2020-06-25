@@ -8,6 +8,14 @@
     :model="RegisterForm"
     class="login-container">
     <h3 class="login-title">用户注册</h3>
+    <el-form-item prop="host">
+      <el-input size="normal"
+                type="text"
+                v-model="RegisterForm.host"
+                auto-complete="off"
+                placeholder="请输入用户名"
+                prefix-icon="el-icon-user-solid"></el-input>
+    </el-form-item>
     <el-form-item prop="password">
       <el-input size="normal"
                 type="password"
@@ -24,15 +32,7 @@
                 placeholder="请再次输入你的密码"
                 prefix-icon="el-icon-s-goods"></el-input>
     </el-form-item>
-    <el-form-item prop="name">
-      <el-input size="normal"
-                type="text"
-                v-model="RegisterForm.name"
-                auto-complete="off"
-                placeholder="请输入你的姓名"
-                prefix-icon="el-icon-user-solid"></el-input>
-    </el-form-item>
-    <el-form-item prop="school">
+<!--    <el-form-item prop="school">
       <el-select size="medium"
                  clearable="clearable"
                  v-model="RegisterForm.school"
@@ -47,12 +47,12 @@
           <span style="float: right; color: #8492a6; font-size: 13px; margin-left: 20px">{{ item.value }}</span>
         </el-option>
       </el-select>
-    </el-form-item>
+    </el-form-item>-->
     <el-form-item>
       <el-button size="normal"
                  type="primary"
                  style="width: 100%"
-                 @click="submitRegister">提交
+                 @click="submitRegister">注册
       </el-button>
     </el-form-item>
     <el-form-item>
@@ -66,28 +66,36 @@
 </template>
 
 <script>
-  import {validatePass} from '@/utils/validate'
-  import {validatePassConfirm} from '@/utils/validate'
+  import {validatePass} from '../../utils/validate'
+  import {validatePassConfirm} from '../../utils/validate'
 
   export default {
     created () {
       this.RegisterForm.host = this.$store.state.register_host
     },
     data () {
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('Place enter your password'))
+        } else {
+          callback()
+        }
+      }
+      var validatePassConfirm = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('Place enter your password again'))
+        } else if (value !== this.RegisterForm.password) {
+          callback(new Error('Input password is inconsistent'))
+        } else {
+          callback()
+        }
+      }
       return {
         loading: false,
         RegisterForm: {
           host: null,
           password: null,
-          confirm: null,
-          email: null,
-          phone: null,
-          name: null,
-          school: null,
-          title: null,
-          degree: null,
-          course: null,
-          yearOfTeaching: null
+          confirm: null
         },
         rules: {
           password: [{required: true, validator: validatePass, trigger: 'blur'}],
@@ -108,13 +116,11 @@
           if (valid) {
             console.log('提交的注册信息的合法的')
             this.loading = true
-            this.$axios({
-              method: 'post',
-              url: 'user/register',
-              data: this.RegisterForm
-            }).then(response => {
+            this.postRequest2('/user/register',
+              this.RegisterForm
+            ).then(response => {
               console.log('response=>', response)
-              if (response.status === 200) {
+              if (response) {
                 this.$router.push('/')
                 return this.$message.success('Register Success!')
               } else {

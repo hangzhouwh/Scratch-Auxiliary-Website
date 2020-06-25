@@ -68,6 +68,7 @@
                 this.loading = false
                 this.$store.dispatch('setHost', resp.data.host)
                 this.$store.dispatch('setName', resp.data.name)
+                this.$router.push('/home')
               }
             })
           } else {

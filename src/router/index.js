@@ -17,26 +17,27 @@ export default new Router({
     },
     {
       path: '/register',
-      component: () => import('../views/Register.vue'),
+      component: () => import('../views/login/Register.vue'),
       redirect: '/registerGetVc',
       children: [
         {
           path: '/registerGetVc',
-          component: () => import('../views/RegisterGetVc.vue'),
+          component: () => import('../views/login/RegisterGetVc.vue'),
         },
         {
           path: '/registerEnterPwq',
-          component: () => import('../views/RegisterEnterPwd.vue'),
+          component: () => import('../views/login/RegisterEnterPwd.vue'),
         }
       ]
     },
     {
       path: '/login',
-      component: () => import('../views/Login.vue'),
+      component: () => import('../views/login/Login.vue'),
     },
     {
       path: '/home',
       component: () => import('../views/Home.vue'),
+      redirect:'/home/video_list',
       meta: {
         requireAuth: true
       },

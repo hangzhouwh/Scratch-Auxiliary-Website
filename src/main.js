@@ -6,9 +6,11 @@ import router from './router'
 import store from './store'
 
 import {postRequest} from './utils/api'
+import {postRequest2} from './utils/api'
 import {getRequest} from './utils/api'
 
 Vue.prototype.postRequest = postRequest
+Vue.prototype.postRequest2 = postRequest2
 Vue.prototype.getRequest = getRequest
 
 import 'font-awesome/css/font-awesome.min.css'

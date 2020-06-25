@@ -1,32 +1,23 @@
 <template>
   <div class="mark-wrapper">
     <div>
+      <div style="width: 410px"></div>
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="视频" name="1">
-          <video-player class="video-player-box"
-                        ref="videoPlayer"
-                        :options="playerOptions"
-                        :playsinline="true">
-          </video-player>
+          <iframe height=225 width=400 :src='projectData.videoUrl'></iframe>
         </el-collapse-item>
         <el-collapse-item title="图片" name="2">
           <el-image :src="projectData.picUrl">
-            <div slot="placeholder" class="image-slot">
-              加载中<span class="dot">...</span>
+            <div slot="error" class="image-slot">
+              <i class="el-icon-picture-outline"></i>
             </div>
           </el-image>
-        </el-collapse-item>
-        <el-collapse-item title="代码" name="3">
-        <pre>
-          <code>
-            {{this.codeData}}
-          </code>
-        </pre>
         </el-collapse-item>
       </el-collapse>
     </div>
 
     <div>
+      <div style="height: 100px"></div>
       <el-form ref="markFormRef"
                :model="markForm"
                label-width="80px">
@@ -55,66 +46,8 @@
         activeNames: ['1'],
         projectData: {
           pid: '0001',
-          videoUrl: 'videoUrl0001',
-          picUrl: 'picUrl0001',
-          codeUrl: 'codeUrl0001',
-          sampleNum: null,
-          sampleProportion: null
-        },
-        playerOptions: {
-          muted: false,
-          autoplay: true,
-          playbackRates: [0.7, 1.0, 1.5, 2.0],
-          preload: 'auto',
-          aspectRatio: '16:9',
-          fluid: true,
-          sources: [{
-            type: 'video/mp4',
-            src: 'https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm'
-          }],
-          poster: '/static/images/author.jpg',
-        },
-        codeData: {
-          id: '9',
-          children: [{
-            'id': '8',
-            'children': [{
-              'id': '7',
-              'children': [{
-                'id': '6',
-                'children': [
-                  {
-                    'id': '0',
-                    'type': 'isPathForward'
-                  },
-                  {
-                    'id': '2',
-                    'children': [{
-                      'id': '1',
-                      'type': 'maze_moveForward'
-                    }],
-                    'type': 'DO'
-                  },
-                  {
-                    'id': '5',
-                    'children': [{
-                      'id': '4',
-                      'children': [{
-                        'id': '3',
-                        'type': 'turnLeft'
-                      }],
-                      'type': 'maze_turn'
-                    }],
-                    'type': 'ELSE'
-                  }
-                ],
-                'type': 'maze_ifElse'
-              }],
-              'type': 'DO'
-            }],
-            'type': 'maze_forever'
-          }],
-          type: 'program'
+          videoUrl: 'https://player.youku.com/embed/XNDcyNjMxMDA4OA==',
+          picUrl: 'https://s1.ax1x.com/2020/06/24/NwdzhF.png'
         },
         markForm: {
           score: ''
@@ -139,10 +72,6 @@
   .mark-wrapper {
     display: flex;
     flex-direction: row;
-  }
-
-  .video-player-box {
-    width: 400px;
   }
 
   pre {

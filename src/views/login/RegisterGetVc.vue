@@ -8,7 +8,7 @@
     :model="VcForm"
     class="login-container">
     <h3 class="login-title">用户注册</h3>
-    <el-form-item prop="host">
+    <el-form-item prop="input">
       <el-input size="normal"
                 type="text"
                 v-model="VcForm.input"
@@ -46,10 +46,19 @@
 </template>
 
 <script>
-  import {validatePhoneEmail} from '../utils/validate'
-
   export default {
     data () {
+      var validatePhoneEmail = (rule, value, callback) => {
+        if (/^((13[0-9])|(15[0-9])|(147)|(17[0-9])|(18[0-9]))\d{8}$/.test(value)) {
+          this.type = 'phone'
+          callback()
+        } else if (/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+          this.type = 'email'
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱或手机号'))
+        }
+      }
       return {
         loading: false,
         VcForm: {
@@ -57,6 +66,7 @@
           vc: null
         },
         realVc: null,
+        type: null,
         rules: {
           input: [{required: true, validator: validatePhoneEmail, trigger: 'blur'}],
           vc: [{required: true, trigger: 'blur'}]
@@ -86,6 +96,7 @@
       },
       sendCode () {
         if (this.VcForm.input !== null) {
+          console.log(this.type)
           if (this.type === 'phone') {
             this.$axios.post('/user/send_msg', {}, {
               params: {

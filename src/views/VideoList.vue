@@ -25,8 +25,8 @@
         projectData: [
           {
             pid: '0001',
-            videoUrl: 'videoUrl0001',
-            picUrl: 'picUrl0001',
+            videoUrl: 'https://player.youku.com/embed/XNDcyNjMwNzY1Ng==',
+            picUrl: 'https://imgchr.com/i/NwdzhF',
             codeUrl: 'codeUrl0001',
             sampleNum: null,
             sampleProportion: null
