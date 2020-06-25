@@ -66,9 +66,6 @@
 </template>
 
 <script>
-  import {validatePass} from '../../utils/validate'
-  import {validatePassConfirm} from '../../utils/validate'
-
   export default {
     created () {
       this.RegisterForm.host = this.$store.state.register_host

@@ -37,7 +37,7 @@ export default new Router({
     {
       path: '/home',
       component: () => import('../views/Home.vue'),
-      redirect:'/home/video_list',
+      redirect: '/home/video_list',
       meta: {
         requireAuth: true
       },
