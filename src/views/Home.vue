@@ -14,21 +14,48 @@
             <el-form :model="user">
               <el-form-item label="用户名" label-width="120px">
                 <el-input v-model="user.host"
-                          autocomplete="off"
                           disabled></el-input>
               </el-form-item>
-              <el-form-item label="真实姓名" label-width="120px">
+              <el-form-item label="姓名" label-width="120px">
                 <el-input v-model="user.name"
-                          autocomplete="off"></el-input>
+                          placeholder="请输入姓名"></el-input>
               </el-form-item>
               <el-form-item label="手机号" label-width="120px">
                 <el-input v-model="user.phone"
-                          autocomplete="off"></el-input>
+                          placeholder="请输入手机号"></el-input>
               </el-form-item>
+              <el-form-item label="学校" label-width="120px">
+                <el-select v-model="user.school" placeholder="请选择任教高校" style="width:100%">
+                  <el-option
+                    v-for="item in optionSchool"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
+                      {{ item.value }}
+                    </span>
+                  </el-option>
+                </el-select>
+              </el-form-item>
+<!--              <el-form-item label="职称" label-width="120px">
+                <el-select v-model="user.title" placeholder="请选择职称" style="width:100%">
+                  <el-option
+                    v-for="item in optionTitle"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                    <span style="float: left">{{ item.label }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
+                      {{ item.value }}
+                    </span>
+                  </el-option>
+                </el-select>
+              </el-form-item>-->
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">Cancel</el-button>
-              <el-button type="primary" @click="editUserInfo()">OK</el-button>
+              <el-button @click="dialogFormVisible = false">取消</el-button>
+              <el-button type="primary" @click="editUserInfo()">修改信息</el-button>
             </div>
           </el-dialog>
         </div>
@@ -36,23 +63,23 @@
     </el-header>
     <el-container>
       <el-aside>
-        <el-menu
-          default-active="1"
-          class="el-menu-vertical-demo"
-          @open="handleOpen"
-          @close="handleClose">
+        <el-menu :router="true"
+                 :unique-opened="true"
+                 class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>作品列表</span>
             </template>
-            <el-menu-item index="1-1">已打分</el-menu-item>
-            <el-menu-item index="1-2">未打分</el-menu-item>
+            <el-menu-item :index="'/home/project_list'">已打分</el-menu-item>
+            <el-menu-item :index="'/home/project_marked_list'">未打分</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>
-        <router-view @openMarkDialog="openMarkDialog(arguments)"/>
+        <router-view ref="projectListRef"
+                     @openMarkDialog="openMarkDialog($event,arguments)"
+                     :eventCall="callRefreshProjectList"/>
         <el-dialog
           title="作品打分"
           :visible.sync="dialogMarkVisible"
@@ -87,14 +114,35 @@
           course: '',
           yearOfTeaching: ''
         },
-        videoList: [
-          {}
-        ],
         openProject: {
           pid: '',
           videoUrl: '',
           picUrl: ''
-        }
+        },
+        optionSchool: [
+          {
+            value: 'Zhejiang University City College',
+            label: '浙大城市学院'
+          }
+        ],
+        optionTitle:[
+          {
+            value: 'assistant',
+            label: '助教'
+          },
+          {
+            value: 'lecturer',
+            label: '讲师'
+          },
+          {
+            value: 'associate professor',
+            label: '副教授'
+          },
+          {
+            value: 'professor',
+            label: '教授'
+          }
+        ]
       }
     },
     components: {
@@ -109,7 +157,8 @@
         console.log(key, keyPath)
       },
       openMarkDialog (args) {
-        this.openProject = args[0]
+        console.log(args)
+        this.openProject = args
         this.dialogMarkVisible = true
       },
       openUserInfoDialog () {
@@ -123,6 +172,7 @@
           console.log('response=>', resp)
           if (resp) {
             this.$store.dispatch('setUser', resp.data)
+            this.dialogUserInfoVisible = false
             return this.$message.success('修改用户信息成功')
           } else {
             return this.$message.error('修改用户信息失败')
@@ -131,6 +181,10 @@
       },
       close () {
         this.dialogMarkVisible = false
+        this.callRefreshProjectList()
+      },
+      callRefreshProjectList () {
+        this.$refs.projectListRef.getProjectList(1)
       }
     }
   }

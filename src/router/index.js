@@ -37,14 +37,21 @@ export default new Router({
     {
       path: '/home',
       component: () => import('../views/Home.vue'),
-      redirect: '/home/video_list',
+      redirect: '/home/project_list',
       meta: {
         requireAuth: true
       },
       children: [
         {
-          path: '/home/video_list',
+          path: '/home/project_list',
           component: () => import('../views/ProjectList.vue'),
+          meta: {
+            requireAuth: true
+          },
+        },
+        {
+          path: '/home/project_marked_list',
+          component: () => import('../views/ProjectMarkedList.vue'),
           meta: {
             requireAuth: true
           },

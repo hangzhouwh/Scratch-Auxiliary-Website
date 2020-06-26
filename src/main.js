@@ -4,17 +4,18 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import 'font-awesome/css/font-awesome.min.css'
+import './plugins/elementui.js'
 
 import {postRequest} from './utils/api'
 import {postRequest2} from './utils/api'
 import {getRequest} from './utils/api'
+import {getRequest2} from './utils/api'
 
 Vue.prototype.postRequest = postRequest
 Vue.prototype.postRequest2 = postRequest2
 Vue.prototype.getRequest = getRequest
-
-import 'font-awesome/css/font-awesome.min.css'
-import './plugins/elementui.js'
+Vue.prototype.getRequest2 = getRequest2
 
 Vue.config.productionTip = false
 

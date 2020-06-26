@@ -5,6 +5,8 @@ import QS from 'qs'
 
 // 响应拦截器
 axios.interceptors.response.use(success => {
+  // console.log('拦截前的response-success:')
+  // console.log(success)
   if (success.status && success.status == 200 && success.data.status == 500) {
     Message.error({message: success.data.msg})
     return
@@ -18,6 +20,8 @@ axios.interceptors.response.use(success => {
   }
   return success.data
 }, error => {
+  // console.log('拦截前的response-error:')
+  // console.log(error)
   if (error.response.status == 504 || error.response.status == 404) {
     Message.error({message: '服务器被吃了( ╯□╰ )'})
   } else if (error.response.status == 403) {
@@ -57,5 +61,13 @@ export const getRequest = (url, params) => {
     method: 'get',
     url: `${base}${url}`,
     params: params
+  })
+}
+
+export const getRequest2 = (url, params) => {
+  return axios({
+    method: 'get',
+    url: `${base}${url}`,
+    data: params
   })
 }

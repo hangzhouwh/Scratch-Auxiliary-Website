@@ -1,7 +1,11 @@
 <template>
   <div class="mark-wrapper">
     <div>
-      <div style="width: 410px"></div>
+      <div style="width: 410px">
+        <span>
+          <h2>{{projectData.pid}}</h2>
+        </span>
+      </div>
       <el-collapse v-model="activeNames" @change="handleChange">
         <el-collapse-item title="视频" name="1">
           <iframe height=225 width=400 :src='projectData.videoUrl'></iframe>
@@ -58,11 +62,12 @@
         console.log(val)
       },
       onSubmitMark () {
-        this.postRequest(`mark/submit_mark/${this.$store.getters.host}`, {
+        this.postRequest(`/mark/submit_mark/${this.$store.getters.host}`, {
           score: this.markForm.score,
           pid: this.projectData.pid
         }).then(resp => {
           if (resp) {
+            console.log(resp)
             this.$emit('close')
           }
         })
