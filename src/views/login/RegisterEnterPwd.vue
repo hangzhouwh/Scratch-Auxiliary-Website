@@ -67,9 +67,6 @@
 
 <script>
   export default {
-    created () {
-      this.RegisterForm.host = this.$store.state.register_host
-    },
     data () {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
@@ -118,7 +115,8 @@
             ).then(response => {
               console.log('response=>', response)
               if (response) {
-                this.$router.push('/')
+                this.$store.dispatch('setRHost', this.RegisterForm.host)
+                this.$router.push('/completionUserInfo')
                 return this.$message.success('Register Success!')
               } else {
                 return this.$message.error('Register Error!')

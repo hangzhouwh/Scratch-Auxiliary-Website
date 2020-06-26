@@ -27,6 +27,10 @@ export default new Router({
         {
           path: '/registerEnterPwq',
           component: () => import('../views/login/RegisterEnterPwd.vue'),
+        },
+        {
+          path: '/completionUserInfo',
+          component: () => import('../views/login/completionUserInfo.vue'),
         }
       ]
     },
