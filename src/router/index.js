@@ -9,7 +9,7 @@ Router.prototype.push = function push (to) {
 }
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
   routes: [
     {
       path: '/',

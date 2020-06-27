@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 import 'font-awesome/css/font-awesome.min.css'
 import './plugins/elementui.js'
+import "babel-polyfill"
 
 import {postRequest} from './utils/api'
 import {postRequest2} from './utils/api'
