@@ -13,7 +13,7 @@
                 type="text"
                 v-model="VcForm.input"
                 auto-complete="off"
-                placeholder="请输入邮箱或手机号"
+                placeholder="请输入邮箱"
                 prefix-icon="el-icon-user-solid"></el-input>
     </el-form-item>
     <el-form-item prop="vc">
@@ -56,7 +56,7 @@
           this.type = 'email'
           callback()
         } else {
-          callback(new Error('请输入正确的邮箱或手机号'))
+          callback(new Error('请输入正确的邮箱'))
         }
       }
       return {
@@ -78,39 +78,16 @@
         console.log('提交验证码')
         if (this.VcForm.vc === this.realVc) {
           this.$store.dispatch('setREmail', this.VcForm.input)
-          this.$message.success('Verification code is right!')
+          this.$message.success('验证码正确！')
           this.$router.push('/registerEnterPwq')
         } else {
-          this.$message.error('Verification code is error!')
+          this.$message.error('验证码错误！')
         }
-        /*this.$refs.VerificationFormRef.validate((valid) => {
-          console.log(this.RegisterForm)
-          if (valid) {
-            console.log('提交的注册信息的合法的')
-            this.loading = true
-
-          } else {
-            return this.$message.warning('Info Error!')
-          }
-        })*/
       },
       sendCode () {
         if (this.VcForm.input !== null) {
           console.log(this.type)
-          if (this.type === 'phone') {
-            this.$axios.post('/user/send_msg', {}, {
-              params: {
-                phone: this.VcForm.input
-              }
-            }).then(response => {
-              console.log(response)
-              if (response.status !== 200) {
-                this.$message.error('Verification code have some error!')
-              }
-              this.realVc = response.data.data.vc
-              this.$message.success('Verification code have already sent!')
-            })
-          } else if (this.type === 'email') {
+          if (this.type === 'email') {
             this.postRequest('/user/send_email', {
               address: this.VcForm.input
             }).then(resp => {
@@ -118,14 +95,15 @@
               if (resp) {
                 this.realVc = resp.data.vc
                 this.$message.success('验证码已发送！')
+              }else{
+                this.$message.error('验证码发送失败！')
               }
-              this.$message.error('验证码发送失败！')
             })
           } else {
             this.$message.error('邮箱填写错误！')
           }
         } else {
-          this.$message.error('请输入邮箱！')
+          this.$message.error('请输入正确的邮箱！')
         }
       },
       cancel () {

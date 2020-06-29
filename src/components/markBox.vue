@@ -24,13 +24,13 @@
       <div style="height: 100px"></div>
       <el-form ref="markFormRef"
                :model="markForm"
+               :rules="rules"
                label-width="80px">
-        <el-form-item label="分数">
+        <el-form-item label="分数" prop="score">
           <el-input v-model="markForm.score"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmitMark">确定</el-button>
-          <el-button>取消</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,10 +50,18 @@
       console.log(this.projectData)
     },
     data () {
+      var validateScore = (rule, value, callback) => {
+        if (!/^([0-9]{1,2}|100)$/.test(value)) {
+          callback(new Error('请输入0-100的分数'))
+        }
+      }
       return {
         activeNames: ['1'],
         markForm: {
           score: ''
+        },
+        rules: {
+          score: [{required: true, validator: validateScore, trigger: 'blur'}],
         }
       }
     },
@@ -62,16 +70,21 @@
         console.log(val)
       },
       onSubmitMark () {
-        this.postRequest(`/mark/submit_mark/${this.$store.getters.host}`, {
-          score: this.markForm.score,
-          pid: this.projectData.pid
-        }).then(resp => {
-          if (resp) {
-            console.log(resp)
-            this.$emit('close')
+        this.$refs.markFormRef.validate((valid) => {
+          if (valid) {
+            this.postRequest(`/mark/submit_mark/${this.$store.getters.host}`, {
+              score: this.markForm.score,
+              pid: this.projectData.pid
+            }).then(resp => {
+              if (resp) {
+                console.log(resp)
+                this.$emit('close')
+              }
+            })
+          }else{
+            this.$message.success('输入的分数不在范围内！')
           }
         })
-        console.log('submit!')
       }
     }
   }

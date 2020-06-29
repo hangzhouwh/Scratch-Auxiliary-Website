@@ -11,50 +11,59 @@
             </div>
           </el-tooltip>
           <el-dialog title="修改用户资料" :visible.sync="dialogUserInfoVisible">
-            <el-form :model="user">
-              <el-form-item label="用户名" label-width="120px">
-                <el-input v-model="user.host"
+            <el-form :rules="rules"
+                     ref="UserInfoFormRef"
+                     v-loading="loading"
+                     element-loading-text="Loading..."
+                     element-loading-spinner="el-icon-loading"
+                     :model="userInfoForm">
+              <el-form-item label="用户名" prop="host">
+                <el-input v-model="userInfoForm.host"
                           disabled></el-input>
               </el-form-item>
-              <el-form-item label="姓名" label-width="120px">
-                <el-input v-model="user.name"
-                          placeholder="请输入姓名"></el-input>
+              <el-form-item label="姓名" prop="name">
+                <el-input v-model="userInfoForm.name"></el-input>
               </el-form-item>
-              <el-form-item label="手机号" label-width="120px">
-                <el-input v-model="user.phone"
-                          placeholder="请输入手机号"></el-input>
+              <el-form-item label="手机号" prop="phone">
+                <el-input v-model="userInfoForm.phone"></el-input>
               </el-form-item>
-              <el-form-item label="学校" label-width="120px">
-                <el-select v-model="user.school" placeholder="请选择任教高校" style="width:100%">
-                  <el-option
-                    v-for="item in optionSchool"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
-                      {{ item.value }}
-                    </span>
-                  </el-option>
-                </el-select>
+              <el-form-item label="学校" prop="school">
+                <el-input v-model="userInfoForm.school"></el-input>
               </el-form-item>
-<!--              <el-form-item label="职称" label-width="120px">
-                <el-select v-model="user.title" placeholder="请选择职称" style="width:100%">
+              <el-form-item label="职称" prop="title">
+                <el-select v-model="userInfoForm.title" style="width:100%">
                   <el-option
                     v-for="item in optionTitle"
                     :key="item.value"
-                    :label="item.label"
                     :value="item.value">
-                    <span style="float: left">{{ item.label }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
-                      {{ item.value }}
-                    </span>
                   </el-option>
                 </el-select>
-              </el-form-item>-->
+              </el-form-item>
+              <el-form-item label="学历" prop="degree">
+                <el-select v-model="userInfoForm.degree" style="width:100%">
+                  <el-option
+                    v-for="item in optionDegree"
+                    :key="item.value"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="教授课程" prop="course">
+                <el-input v-model="userInfoForm.course"></el-input>
+              </el-form-item>
+              <el-form-item label="教龄" prop="yearOfTeaching">
+                <el-select v-model="userInfoForm.yearOfTeaching" style="width:100%">
+                  <el-option
+                    v-for="item in optionYearOfTeaching"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取消</el-button>
+              <el-button @click="dialogUserInfoVisible = false">取消</el-button>
               <el-button type="primary" @click="editUserInfo()">修改信息</el-button>
             </div>
           </el-dialog>
@@ -71,8 +80,8 @@
               <i class="el-icon-location"></i>
               <span>作品列表</span>
             </template>
-            <el-menu-item :index="'/home/project_list'">已打分</el-menu-item>
-            <el-menu-item :index="'/home/project_marked_list'">未打分</el-menu-item>
+            <el-menu-item :index="'/home/project_list'">未打分</el-menu-item>
+            <el-menu-item :index="'/home/project_marked_list'">已打分</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -103,45 +112,85 @@
       return {
         dialogMarkVisible: false,
         dialogUserInfoVisible: false,
-        user: {
-          host: '',
-          password: '',
-          name: '',
-          phone: '',
-          school: '',
-          title: '',
-          degree: '',
-          course: '',
-          yearOfTeaching: ''
+        loading: false,
+        userInfoForm: {
+          host: null,
+          password: null,
+          name: null,
+          phone: null,
+          school: null,
+          title: null,
+          degree: null,
+          course: null,
+          yearOfTeaching: null
         },
+        rules: {},
         openProject: {
           pid: '',
           videoUrl: '',
           picUrl: ''
         },
-        optionSchool: [
+        optionTitle: [
           {
-            value: 'Zhejiang University City College',
-            label: '浙大城市学院'
+            value: '正高级教师'
+          },
+          {
+            value: '高级教师'
+          },
+          {
+            value: '一级教师'
+          },
+          {
+            value: '二级教师'
+          },
+          {
+            value: '三级教师'
           }
         ],
-        optionTitle:[
+        optionDegree: [
           {
-            value: 'assistant',
-            label: '助教'
+            value: '大学本科以上'
           },
           {
-            value: 'lecturer',
-            label: '讲师'
+            value: '硕士研究生以上'
           },
           {
-            value: 'associate professor',
-            label: '副教授'
+            value: '博士研究生以上'
+          },
+        ],
+        optionYearOfTeaching: [
+          {
+            value: '1',
+            label: '一年以上'
           },
           {
-            value: 'professor',
-            label: '教授'
-          }
+            value: '2',
+            label: '两年以上'
+          },
+          {
+            value: '3',
+            label: '三年以上'
+          },
+          {
+            value: '5',
+            label: '五年以上'
+          },
+          {
+            value: '10',
+            label: '十年以上'
+          },
+          {
+            value: '15',
+            label: '十五年以上'
+          },
+          {
+            value: '20',
+            label: '二十年以上'
+          },
+          {
+            value: '30',
+            label: '三十年以上'
+          },
         ]
       }
     },
@@ -162,20 +211,31 @@
         this.dialogMarkVisible = true
       },
       openUserInfoDialog () {
-        this.user = this.$store.getters.user
+        this.userInfoForm = this.$store.getters.user
+        console.log(this.userInfoForm)
         this.dialogUserInfoVisible = true
       },
       editUserInfo () {
-        this.postRequest2('/user/edit_personal_info',
-          this.user
-        ).then(resp => {
-          console.log('response=>', resp)
-          if (resp) {
-            this.$store.dispatch('setUser', resp.data)
-            this.dialogUserInfoVisible = false
-            return this.$message.success('修改用户信息成功')
+        this.$refs.UserInfoFormRef.validate((valid) => {
+          console.log(this.userInfoForm)
+          if (valid) {
+            console.log('提交的用户信息是合法的')
+            this.loading = true
+            this.postRequest2('/user/edit_personal_info',
+              this.userInfoForm
+            ).then(response => {
+              console.log('response=>', response)
+              if (response) {
+                this.dialogUserInfoVisible = false
+                this.loading = false
+                return this.$message.success('修改信息成功！')
+              } else {
+                this.loading = false
+                return this.$message.error('修改信息失败！')
+              }
+            })
           } else {
-            return this.$message.error('修改用户信息失败')
+            return this.$message.warning('填写信息错误！')
           }
         })
       },

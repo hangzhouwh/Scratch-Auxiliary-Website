@@ -32,22 +32,6 @@
                 placeholder="请再次输入你的密码"
                 prefix-icon="el-icon-s-goods"></el-input>
     </el-form-item>
-<!--    <el-form-item prop="school">
-      <el-select size="medium"
-                 clearable="clearable"
-                 v-model="RegisterForm.school"
-                 placeholder="选择学校"
-                 style="width:100%">
-        <el-option
-          v-for="item in schoolOption"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-          <span style="float: left">{{ item.label }}</span>
-          <span style="float: right; color: #8492a6; font-size: 13px; margin-left: 20px">{{ item.value }}</span>
-        </el-option>
-      </el-select>
-    </el-form-item>-->
     <el-form-item>
       <el-button size="normal"
                  type="primary"
@@ -70,16 +54,16 @@
     data () {
       var validatePass = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('Place enter your password'))
+          callback(new Error('请输入密码'))
         } else {
           callback()
         }
       }
       var validatePassConfirm = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('Place enter your password again'))
+          callback(new Error('请再次输入密码'))
         } else if (value !== this.RegisterForm.password) {
-          callback(new Error('Input password is inconsistent'))
+          callback(new Error('两遍密码不一致'))
         } else {
           callback()
         }
@@ -94,13 +78,7 @@
         rules: {
           password: [{required: true, validator: validatePass, trigger: 'blur'}],
           confirm: [{required: true, validator: validatePassConfirm, trigger: 'blur'}],
-        },
-        schoolOption: [
-          {
-            value: 'Zhejiang University City College',
-            label: '浙大城市学院'
-          }
-        ]
+        }
       }
     },
     methods: {
@@ -115,15 +93,20 @@
             ).then(response => {
               console.log('response=>', response)
               if (response) {
-                this.$store.dispatch('setRHost', this.RegisterForm.host)
-                this.$router.push('/completionUserInfo')
-                return this.$message.success('Register Success!')
+                if (response.code == 200) {
+                  this.$store.dispatch('setRHost', this.RegisterForm.host)
+                  this.$router.push('/completionUserInfo')
+                  return this.$message.success('注册成功！')
+                } else {
+                  return this.$message.success(response.msg)
+                }
               } else {
-                return this.$message.error('Register Error!')
+                this.$router.push('/registerEnterPwq')
+                return this.$message.error('注册出错！')
               }
             })
           } else {
-            return this.$message.warning('Info Error!')
+            return this.$message.error('注册出错！')
           }
         })
       },

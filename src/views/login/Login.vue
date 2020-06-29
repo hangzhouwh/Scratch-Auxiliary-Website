@@ -76,6 +76,7 @@
               }
             })
           } else {
+            this.$message.success('请输入正确的账户密码！')
           }
         })
       },

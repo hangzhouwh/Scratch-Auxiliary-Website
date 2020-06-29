@@ -14,7 +14,15 @@ const mutations = {
     state.host = val
   },
   SET_USER (state, val) {
-    state = val
+    state.host = val.host
+    state.name = val.name
+    state.email = val.email
+    state.phone = val.phone
+    state.school = val.school
+    state.title = val.title
+    state.degree = val.degree
+    state.course = val.course
+    state.yearOfTeaching = val.year_of_teaching
   }
 }
 const actions = {

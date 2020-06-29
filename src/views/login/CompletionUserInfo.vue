@@ -17,30 +17,15 @@
                 placeholder="请输入手机号"></el-input>
     </el-form-item>
     <el-form-item label="学校" prop="school">
-      <el-select v-model="userInfoForm.school" placeholder="请选择任教高校" style="width:100%">
-        <el-option
-          v-for="item in optionSchool"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-          <span style="float: left">{{ item.label }}</span>
-          <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
-                      {{ item.value }}
-                    </span>
-        </el-option>
-      </el-select>
+      <el-input v-model="userInfoForm.school"
+                placeholder="请输入就职学校"></el-input>
     </el-form-item>
     <el-form-item label="职称" prop="title">
       <el-select v-model="userInfoForm.title" placeholder="请选择职称" style="width:100%">
         <el-option
           v-for="item in optionTitle"
           :key="item.value"
-          :label="item.label"
           :value="item.value">
-          <span style="float: left">{{ item.label }}</span>
-          <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
-                      {{ item.value }}
-                    </span>
         </el-option>
       </el-select>
     </el-form-item>
@@ -50,7 +35,6 @@
           v-for="item in optionDegree"
           :key="item.value"
           :value="item.value">
-          <span style="float: left">{{ item.value }}</span>
         </el-option>
       </el-select>
     </el-form-item>
@@ -65,10 +49,6 @@
           :key="item.value"
           :label="item.label"
           :value="item.value">
-          <span style="float: left">{{ item.label }}</span>
-          <span style="float: right; color: #8492a6; font-size: 13px;margin-left: 20px">
-                      {{ item.value }}
-                    </span>
         </el-option>
       </el-select>
     </el-form-item>
@@ -111,28 +91,21 @@
           yearOfTeaching: null
         },
         rules: {},
-        optionSchool: [
-          {
-            value: 'Zhejiang University City College',
-            label: '浙大城市学院'
-          }
-        ],
         optionTitle: [
           {
-            value: 'assistant',
-            label: '助教'
+            value: '正高级教师'
           },
           {
-            value: 'lecturer',
-            label: '讲师'
+            value: '高级教师'
           },
           {
-            value: 'associate professor',
-            label: '副教授'
+            value: '一级教师'
           },
           {
-            value: 'professor',
-            label: '教授'
+            value: '二级教师'
+          },
+          {
+            value: '三级教师'
           }
         ],
         optionDegree: [
@@ -207,7 +180,7 @@
         })
       },
       cancel () {
-        // this.$router.push('/')
+        this.$router.push('/')
       }
     }
   }

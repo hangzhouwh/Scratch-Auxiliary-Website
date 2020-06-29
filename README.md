@@ -2,6 +2,12 @@
 
 > A Vue.js project
 
+## 缺陷
+```bash
+#
+
+```
+
 ## Build Setup
 
 ``` bash
