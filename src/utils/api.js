@@ -3,6 +3,20 @@ import {Message} from 'element-ui'
 import router from '../router'
 import QS from 'qs'
 
+// 请求拦截器
+// axios.interceptors.request.use(
+//   config => {
+//     if (localStorage.getItem('Authorization')) {
+//       //token字段是要和后端协商好的
+//       config.headers.common['token'] = localStorage.getItem('Authorization')
+//       // debugger
+//     }
+//     return config
+//   },
+//   error => {
+//     return Promise.reject(error)
+//   })
+
 // 响应拦截器
 axios.interceptors.response.use(success => {
   // console.log('拦截前的response-success:')
@@ -40,6 +54,7 @@ axios.interceptors.response.use(success => {
 })
 
 let base = 'http://39.99.211.127:8880'
+// let base = 'http://localhost:8889'
 
 export const postRequest = (url, params) => {
   return axios({

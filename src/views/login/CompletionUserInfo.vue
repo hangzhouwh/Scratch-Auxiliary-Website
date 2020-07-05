@@ -76,6 +76,13 @@
       this.userInfoForm.email = this.$store.getters.reamil
     },
     data () {
+      var validateNotNull = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('信息不能为空'))
+        } else {
+          return callback()
+        }
+      }
       return {
         loading: false,
         userInfoForm: {
@@ -90,7 +97,18 @@
           course: null,
           yearOfTeaching: null
         },
-        rules: {},
+        rules: {
+          host: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          password: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          name: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          email: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          phone: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          school: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          title: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          degree: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          course: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+          yearOfTeaching: [{required: true, validator: validateNotNull, trigger: 'blur'}],
+        },
         optionTitle: [
           {
             value: '正高级教师'
@@ -175,7 +193,7 @@
               }
             })
           } else {
-            return this.$message.warning('填写信息错误！')
+            return this.$message.warning('填写信息错误或不完整！')
           }
         })
       },

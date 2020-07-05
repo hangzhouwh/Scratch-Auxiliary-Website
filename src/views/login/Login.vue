@@ -38,6 +38,7 @@
                  @click="register">注册
       </el-button>
     </el-form-item>
+    <el-link type="primary" @click="openWord()">使用前请看此用户说明</el-link>
   </el-form>
 </template>
 
@@ -68,7 +69,7 @@
                 this.loading = false
                 this.$store.dispatch('setHost', resp.data.host)
                 this.getRequest(`/user/${this.loginForm.username}/get_personal_info`).then(resp => {
-                  if (resp){
+                  if (resp) {
                     this.$store.dispatch('setUser', resp.data)
                   }
                 })
@@ -82,6 +83,9 @@
       },
       register () {
         this.$router.push('/register')
+      },
+      openWord () {
+        window.open('static/billboard.html')
       }
     }
   }

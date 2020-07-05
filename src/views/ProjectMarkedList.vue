@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-tooltip class="item" content="双击对应项目打分" placement="right">
     <el-table :data="data.projects"
               style="width: 100%"
               @row-dblclick="onRowdblclick">
@@ -11,15 +12,8 @@
                        label="打分"
                        width="180">
       </el-table-column>
-<!--      <el-table-column prop="videoUrl"
-                       label="视频url"
-                       width="180">
-      </el-table-column>
-      <el-table-column prop="picUrl"
-                       label="图片url"
-                       width="180">
-      </el-table-column>-->
     </el-table>
+    </el-tooltip>
     <el-pagination
       background
       layout="prev, pager, next"
