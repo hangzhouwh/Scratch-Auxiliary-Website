@@ -58,12 +58,6 @@
         required: true
       }
     },
-    created () {
-    },
-    mounted () {
-      this.markForm.score=this.projectData.score
-      this.markForm.basis=this.projectData.basis
-    },
     data () {
       var validateScore = (rule, value, callback) => {
         if (!/^([0-9]{1,2}|100)$/.test(value)) {
@@ -101,6 +95,10 @@
             this.$message.success('输入的分数不在范围内！')
           }
         })
+      },
+      clear(){
+        console.log("清空规则")
+        this.$refs.markFormRef.clearValidate()
       }
     }
   }

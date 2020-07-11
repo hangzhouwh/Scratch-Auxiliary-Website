@@ -92,9 +92,12 @@
         <el-dialog
           title="作品打分"
           :visible.sync="dialogMarkVisible"
+          @close='closeDialog'
           width="60%">
-          <markBox :projectData="openProject"
-                   @close="close()"></markBox>
+          <markBox ref="markBoxRef"
+                   :projectData="openProject"
+                   @close="close()"
+                   :eventCall="closeMarkBox"></markBox>
         </el-dialog>
       </el-main>
     </el-container>
@@ -242,10 +245,20 @@
       },
       close () {
         this.dialogMarkVisible = false
+        this.closeMarkBox()
+        this.callRefreshProjectList()
+      },
+      closeDialog () {
+        this.openProject = ''
+        this.closeMarkBox()
         this.callRefreshProjectList()
       },
       callRefreshProjectList () {
         this.$refs.projectListRef.getProjectList(1)
+      },
+      closeMarkBox(){
+        console.log("调用清空")
+        this.$refs.markBoxRef.clear()
       }
     }
   }
