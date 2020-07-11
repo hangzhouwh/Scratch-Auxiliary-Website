@@ -31,11 +31,19 @@
                  @click="submitLogin">登录
       </el-button>
     </el-form-item>
+<!--    <el-form-item>-->
+<!--      <el-button size="normal"-->
+<!--                 type="success"-->
+<!--                 style="width: 100%"-->
+<!--                 disabled-->
+<!--                 @click="register">注册-->
+<!--      </el-button>-->
+<!--    </el-form-item>-->
     <el-form-item>
       <el-button size="normal"
-                 type="success"
+                 type="warning"
                  style="width: 100%"
-                 @click="register">注册
+                 @click="ifForget">修改密码
       </el-button>
     </el-form-item>
     <el-link type="primary" @click="openWord()">使用前请看此用户说明</el-link>
@@ -83,6 +91,9 @@
       },
       register () {
         this.$router.push('/register')
+      },
+      ifForget () {
+        this.$router.push('/ifForget')
       },
       openWord () {
         window.open('static/billboard.html')

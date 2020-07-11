@@ -16,6 +16,10 @@ export default new Router({
       redirect: '/login',
     },
     {
+      path: '/ifForget',
+      component: () => import('../views/login/IfForget.vue'),
+    },
+    {
       path: '/register',
       component: () => import('../views/login/Register.vue'),
       redirect: '/registerGetVc',

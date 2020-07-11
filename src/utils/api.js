@@ -22,32 +22,32 @@ axios.interceptors.response.use(success => {
   // console.log('拦截前的response-success:')
   // console.log(success)
   if (success.status && success.status == 200 && success.data.status == 500) {
-    Message.error({message: success.data.msg})
+    console.error({message: success.data.msg})
     return
   }
   if (success.data.code == 'error') {
-    Message.error({message: success.data.msg})
+    console.error({message: success.data.msg})
     return
   }
   if (success.data.msg) {
-    Message.success({message: success.data.msg})
+    console.success({message: success.data.msg})
   }
   return success.data
 }, error => {
   // console.log('拦截前的response-error:')
   // console.log(error)
   if (error.response.status == 504 || error.response.status == 404) {
-    Message.error({message: '服务器被吃了( ╯□╰ )'})
+    console.error({message: '服务器被吃了( ╯□╰ )'})
   } else if (error.response.status == 403) {
-    Message.error({message: '权限不足，请联系管理员'})
+    console.error({message: '权限不足，请联系管理员'})
   } else if (error.response.status == 401) {
-    Message.error({message: error.response.data.msg ? error.response.data.msg : '尚未登录，请登录'})
+    console.log({message: error.response.data.msg ? error.response.data.msg : '尚未登录，请登录'})
     router.replace('/')
   } else {
     if (error.response.data.msg) {
-      Message.error({message: error.response.data.msg})
+      console.error({message: error.response.data.msg})
     } else {
-      Message.error({message: '未知错误!'})
+      console.error({message: '未知错误!'})
     }
   }
   return

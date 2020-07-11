@@ -27,6 +27,9 @@
               <el-form-item label="手机号" prop="phone">
                 <el-input v-model="userInfoForm.phone"></el-input>
               </el-form-item>
+              <el-form-item label="邮箱" prop="email">
+                <el-input v-model="userInfoForm.email"></el-input>
+              </el-form-item>
               <el-form-item label="学校" prop="school">
                 <el-input v-model="userInfoForm.school"></el-input>
               </el-form-item>
