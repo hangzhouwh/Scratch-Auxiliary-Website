@@ -12,15 +12,15 @@
         <div>
           <el-form
             ref="markFormRef"
-            :model="markForm"
+            :model="projectData"
             :rules="rules">
             <el-form-item label="分数" prop="score">
-              <el-input v-model="markForm.score"></el-input>
+              <el-input v-model="projectData.score"></el-input>
             </el-form-item>
             <el-form-item label="评分依据" prop="basis">
               <el-input
                 type="textarea"
-                v-model="markForm.basis"
+                v-model="projectData.basis"
                 maxlength="200"
                 show-word-limit>
               </el-input>
@@ -59,7 +59,10 @@
       }
     },
     created () {
-      console.log(this.projectData)
+    },
+    mounted () {
+      this.markForm.score=this.projectData.score
+      this.markForm.basis=this.projectData.basis
     },
     data () {
       var validateScore = (rule, value, callback) => {
@@ -71,10 +74,6 @@
       }
       return {
         activeNames: ['1', '2'],
-        markForm: {
-          score: '',
-          basis: ''
-        },
         rules: {
           score: [{required: true, validator: validateScore, trigger: 'blur'}],
           basis: [{required: true, message:'请输入200字以内的评分依据',trigger: 'blur'}],
@@ -89,8 +88,8 @@
         this.$refs.markFormRef.validate((valid) => {
           if (valid) {
             this.postRequest(`/mark/submit_mark/${this.$store.getters.host}`, {
-              score: this.markForm.score,
-              basis:this.markForm.basis,
+              score: this.projectData.score,
+              basis:this.projectData.basis,
               pid: this.projectData.pid
             }).then(resp => {
               if (resp) {

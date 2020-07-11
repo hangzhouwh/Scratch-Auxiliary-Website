@@ -128,7 +128,9 @@
         openProject: {
           pid: '',
           videoUrl: '',
-          picUrl: ''
+          picUrl: '',
+          basis: '',
+          score: ''
         },
         optionTitle: [
           {
@@ -206,7 +208,6 @@
         console.log(key, keyPath)
       },
       openMarkDialog (args) {
-        console.log(args)
         this.openProject = args
         this.dialogMarkVisible = true
       },

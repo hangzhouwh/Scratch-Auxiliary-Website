@@ -54,7 +54,7 @@ axios.interceptors.response.use(success => {
 })
 
 let base = 'http://39.99.211.127:8880'
-// let base = 'http://localhost:8889'
+// let base = 'http://localhost:8880'
 
 export const postRequest = (url, params) => {
   return axios({
