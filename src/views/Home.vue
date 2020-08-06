@@ -3,7 +3,7 @@
     <el-header>
       <div class="main-header">
         <div class="header-logo"></div>
-        <div>标题</div>
+        <h3>可视化编程计算思维评测</h3>
         <div class="userPart">
           <el-tooltip class="item" effect="light" content='修改用户资料' placement="left">
             <div @click="openUserInfoDialog">
@@ -86,6 +86,20 @@
             <el-menu-item :index="'/home/project_list'">未打分</el-menu-item>
             <el-menu-item :index="'/home/project_marked_list'">已打分</el-menu-item>
           </el-submenu>
+          <el-menu-item index="2"
+                        onclick="">
+            <template slot="title">
+              <i class="el-icon-s-tools"></i>
+              <span>修改密码</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="3"
+                        onclick="openWord()">
+            <template slot="title">
+              <i class="el-icon-info"></i>
+              <span>系统公告</span>
+            </template>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>
@@ -259,10 +273,13 @@
       callRefreshProjectList () {
         this.$refs.projectListRef.getProjectList(1)
       },
-      closeMarkBox(){
-        console.log("调用清空")
+      closeMarkBox () {
+        console.log('调用清空')
         this.$refs.markBoxRef.clear()
-      }
+      },
+      openWord () {
+        window.open('static/billboard.html')
+      },
     }
   }
 </script>

@@ -1,52 +1,57 @@
 <template>
-  <el-form
-    :rules="rules"
-    ref="changePwdFormRef"
-    class="login-container"
-    v-loading="loading"
-    element-loading-text="提交中"
-    element-loading-spinner="el-icon-loading"
-    :model="changePwdForm">
-    <h3 class="login-title">修改密码</h3>
-    <el-form-item prop="username">
-      <el-input size="normal"
-                type="text"
-                v-model="changePwdForm.username"
-                auto-complete="off"
-                placeholder="请输入用户名"
-                prefix-icon="el-icon-user-solid"></el-input>
-    </el-form-item>
-    <el-form-item prop="password">
-      <el-input size="normal"
-                type="password"
-                v-model="changePwdForm.password"
-                auto-complete="off"
-                placeholder="请输入密码"
-                prefix-icon="el-icon-s-goods"></el-input>
-    </el-form-item>
-    <el-form-item prop="confirm">
-      <el-input size="normal"
-                type="password"
-                v-model="changePwdForm.confirm"
-                auto-complete="off"
-                placeholder="请再次输入你的密码"
-                prefix-icon="el-icon-s-goods"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button size="normal"
-                 type="primary"
-                 style="width: 100%"
-                 @click="submitLogin">确定
-      </el-button>
-    </el-form-item>
-    <el-form-item>
-      <el-button size="normal"
-                 type="success"
-                 style="width: 100%"
-                 @click="cancel">取消
-      </el-button>
-    </el-form-item>
-  </el-form>
+  <div>
+    <h3 align="center">可视化编程计算思维评测</h3>
+    <el-form
+      :rules="rules"
+      ref="changePwdFormRef"
+      class="login-container"
+      v-loading="loading"
+      element-loading-text="提交中"
+      element-loading-spinner="el-icon-loading"
+      :model="changePwdForm">
+      <h3 class="login-title">修改密码</h3>
+      <el-form-item prop="username">
+        <el-input size="normal"
+                  type="text"
+                  v-model="changePwdForm.username"
+                  auto-complete="off"
+                  placeholder="请输入用户名"
+                  prefix-icon="el-icon-user-solid"></el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input size="normal"
+                  type="password"
+                  v-model="changePwdForm.password"
+                  auto-complete="off"
+                  placeholder="请输入密码"
+                  prefix-icon="el-icon-s-goods"></el-input>
+      </el-form-item>
+      <el-form-item prop="confirm">
+        <el-input size="normal"
+                  type="password"
+                  v-model="changePwdForm.confirm"
+                  auto-complete="off"
+                  placeholder="请再次输入你的密码"
+                  prefix-icon="el-icon-s-goods"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="normal"
+                   type="primary"
+                   style="width: 100%"
+                   @click="submitLogin">确定
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button size="normal"
+                   type="success"
+                   style="width: 100%"
+                   @click="cancel">取消
+        </el-button>
+      </el-form-item>
+    </el-form>
+    <h4 align="center">浙大城市学院智慧教育研究组</h4>
+  </div>
+
 </template>
 
 <script>

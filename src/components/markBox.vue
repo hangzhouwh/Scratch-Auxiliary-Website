@@ -15,9 +15,11 @@
             :model="projectData"
             :rules="rules">
             <el-form-item label="分数" prop="score">
-              <el-input v-model="projectData.score"></el-input>
+              <el-input v-model="projectData.score"
+                        placeholder="打分范围：0 ~ 100"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="评分依据" prop="basis">
+            <el-form-item label="评分依据（可选）" prop="basis">
               <el-input
                 type="textarea"
                 v-model="projectData.basis"
@@ -70,7 +72,7 @@
         activeNames: ['1', '2'],
         rules: {
           score: [{required: true, validator: validateScore, trigger: 'blur'}],
-          basis: [{required: true, message:'请输入200字以内的评分依据',trigger: 'blur'}],
+          basis: [{required: false, message: '请输入200字以内的评分依据', trigger: 'blur'}],
         }
       }
     },
@@ -83,7 +85,7 @@
           if (valid) {
             this.postRequest(`/mark/submit_mark/${this.$store.getters.host}`, {
               score: this.projectData.score,
-              basis:this.projectData.basis,
+              basis: this.projectData.basis,
               pid: this.projectData.pid
             }).then(resp => {
               if (resp) {
@@ -92,12 +94,12 @@
               }
             })
           } else {
-            this.$message.success('输入的分数不在范围内！')
+            this.$message.error('输入的分数不在范围内！')
           }
         })
       },
-      clear(){
-        console.log("清空规则")
+      clear () {
+        console.log('清空规则')
         this.$refs.markFormRef.clearValidate()
       }
     }
