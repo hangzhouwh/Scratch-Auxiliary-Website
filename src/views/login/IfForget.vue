@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 align="center">可视化编程计算思维评测</h3>
+    <h1 align="center" style="margin-top: 100px">可视化编程计算思维评测</h1>
     <el-form
       :rules="rules"
       ref="changePwdFormRef"
@@ -10,20 +10,28 @@
       element-loading-spinner="el-icon-loading"
       :model="changePwdForm">
       <h3 class="login-title">修改密码</h3>
-      <el-form-item prop="username">
+      <el-form-item prop="host">
         <el-input size="normal"
                   type="text"
-                  v-model="changePwdForm.username"
+                  v-model="changePwdForm.host"
                   auto-complete="off"
-                  placeholder="请输入用户名"
-                  prefix-icon="el-icon-user-solid"></el-input>
+                  prefix-icon="el-icon-user-solid"
+                  :disabled="true"></el-input>
+      </el-form-item>
+      <el-form-item prop="old">
+        <el-input size="normal"
+                  type="password"
+                  v-model="changePwdForm.old"
+                  auto-complete="off"
+                  placeholder="请输入原密码"
+                  prefix-icon="el-icon-s-goods"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input size="normal"
                   type="password"
                   v-model="changePwdForm.password"
                   auto-complete="off"
-                  placeholder="请输入密码"
+                  placeholder="请输入新密码"
                   prefix-icon="el-icon-s-goods"></el-input>
       </el-form-item>
       <el-form-item prop="confirm">
@@ -31,7 +39,7 @@
                   type="password"
                   v-model="changePwdForm.confirm"
                   auto-complete="off"
-                  placeholder="请再次输入你的密码"
+                  placeholder="请再次输入你的新密码"
                   prefix-icon="el-icon-s-goods"></el-input>
       </el-form-item>
       <el-form-item>
@@ -56,6 +64,9 @@
 
 <script>
   export default {
+    created () {
+      this.changePwdForm.host = this.$store.getters.host
+    },
     data () {
       var validatePass = (rule, value, callback) => {
         if (value === '' || value === null) {
@@ -77,11 +88,12 @@
         loading: false,
         changePwdForm: {
           host: null,
+          old:null,
           password: null,
           confirm: null
         },
         rules: {
-          username: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+          old:[{required: true, validator: validatePass, trigger: 'blur'}],
           password: [{required: true, validator: validatePass, trigger: 'blur'}],
           confirm: [{required: true, validator: validatePassConfirm, trigger: 'blur'}],
         }
@@ -92,24 +104,33 @@
         this.$refs.changePwdFormRef.validate((valid) => {
           if (valid) {
             this.loading = true
-            this.postRequest(`/user/${this.changePwdForm.username}/edit_pwd`, {
-              pwd1: this.changePwdForm.password,
-              pwd2: this.changePwdForm.confirm
+            this.postRequest(`/user/login/${this.changePwdForm.host}`, {
+              password: this.changePwdForm.old
             }).then(resp => {
-              this.loading = false
               if (resp) {
-                this.$router.push('/')
-              } else {
-                this.$message.error('用户名不存在！')
+                this.postRequest(`/user/${this.changePwdForm.host}/edit_pwd`, {
+                  pwd1: this.changePwdForm.password,
+                  pwd2: this.changePwdForm.confirm
+                }).then(resp => {
+                  this.loading = false
+                  if (resp) {
+                    this.$message.success('密码修改成功！')
+                    this.$router.push('/home')
+                  }
+                })
+              }else{
+                this.$message.error('密码错误！')
+                return this.loading = false
               }
             })
           } else {
-            this.$message.error('请填写正确的用户名！')
+            this.$message.error('密码格式错误！')
+            return this.loading = false
           }
         })
       },
       cancel () {
-        this.$router.push('/')
+        this.$router.push('/home')
       }
     }
   }
@@ -118,7 +139,7 @@
   .login-container {
     border-radius: 15px;
     background-clip: padding-box;
-    margin: 180px auto;
+    margin: 80px auto 0 auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;

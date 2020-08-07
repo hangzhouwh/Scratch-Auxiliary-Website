@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 align="center">可视化编程计算思维评测</h3>
+    <h1 align="center" style="margin-top: 100px">可视化编程计算思维评测</h1>
     <el-form
       :rules="rules"
       ref="loginFormRef"
@@ -49,7 +49,7 @@
 <!--        </el-button>-->
 <!--      </el-form-item>-->
       <el-link type="primary" @click="openWord()">使用前请看此用户说明</el-link>
-      <el-link type="primary" @click="openCreateUserPage()">录入受邀请老师（非管理员勿入）</el-link>
+<!--      <el-link type="primary" @click="openCreateUserPage()">录入受邀请老师（非管理员勿入）</el-link>-->
     </el-form>
     <h4 align="center">浙大城市学院智慧教育研究组</h4>
   </div>
@@ -87,6 +87,9 @@
                   }
                 })
                 this.$router.push('/home')
+              }else{
+                this.loading = false
+                this.$message.error('登录出错！')
               }
             })
           } else {
@@ -113,7 +116,7 @@
   .login-container {
     border-radius: 15px;
     background-clip: padding-box;
-    margin: 180px auto;
+    margin: 80px auto 0 auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
     background: #fff;

@@ -77,6 +77,7 @@
       <el-aside>
         <el-menu :router="true"
                  :unique-opened="true"
+                 default-active="1"
                  class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
@@ -86,18 +87,23 @@
             <el-menu-item :index="'/home/project_list'">未打分</el-menu-item>
             <el-menu-item :index="'/home/project_marked_list'">已打分</el-menu-item>
           </el-submenu>
-          <el-menu-item index="2"
-                        onclick="">
+          <el-menu-item :index="'/ifForget'">
             <template slot="title">
               <i class="el-icon-s-tools"></i>
               <span>修改密码</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="3"
-                        onclick="openWord()">
+          <el-menu-item :index="''"
+                        onclick="window.open('static/billboard.html')">
             <template slot="title">
               <i class="el-icon-info"></i>
               <span>系统公告</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item :index="'/createUser'" v-if="ifUserIsAdmin()">
+            <template slot="title">
+              <i class="el-icon-circle-plus"></i>
+              <span>录入受邀请教师账号</span>
             </template>
           </el-menu-item>
         </el-menu>
@@ -118,7 +124,8 @@
         </el-dialog>
       </el-main>
     </el-container>
-    <el-footer></el-footer>
+    <el-footer>
+    </el-footer>
   </el-container>
 </template>
 
@@ -280,6 +287,12 @@
       openWord () {
         window.open('static/billboard.html')
       },
+      openCreateUserPage () {
+        this.$router.push('/createUser')
+      },
+      ifUserIsAdmin () {
+        return this.$store.getters.host === '吴明晖' || this.$store.getters.host === '吴浩' || this.$store.getters.host === '黄鑫辉'
+      }
     }
   }
 </script>
