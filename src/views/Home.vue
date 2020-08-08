@@ -81,7 +81,7 @@
                  class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-s-order"></i>
               <span>作品列表</span>
             </template>
             <el-menu-item :index="'/home/project_list'">未打分</el-menu-item>
@@ -104,6 +104,12 @@
             <template slot="title">
               <i class="el-icon-circle-plus"></i>
               <span>录入受邀请教师账号</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item :index="'/home/user_list'" v-if="ifUserIsAdmin()">
+            <template slot="title">
+              <i class="el-icon-s-data"></i>
+              <span>系统用户数据查看</span>
             </template>
           </el-menu-item>
         </el-menu>

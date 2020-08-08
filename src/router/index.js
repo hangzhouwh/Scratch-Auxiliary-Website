@@ -67,7 +67,14 @@ export default new Router({
           meta: {
             requireAuth: true
           },
-        }
+        },
+        {
+          path: '/home/user_list',
+          component: () => import('../views/UserList.vue'),
+          meta: {
+            requireAuth: true
+          },
+        },
       ]
     }
   ]
